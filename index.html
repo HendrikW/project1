@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekt 1: Learn JavaScript</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div id="start">
+        <header>
+            <img src="1024.png" alt="JS" height="100" width="100">
+            <h1>Learn JavaScript</h1>
+        </header>
+
+        <p>Along with HTML and CSS, JavaScript is one of the three main things of the World Wide Web. It enables
+            interactive web pages and thus is an essential part of web applications. A majority of websites uses it and
+            all major web browsers have a devoted JavaScript engine to execute it.
+        </p>
+
+        <button id="start-btn"> Start Quiz</button>
+
+    </div>
+
+    <div id="quiz" , style="display:none">
+        <h3>JavaScript Quiz</h3>
+
+        <div id="question-container">
+        <p id="topic"></p>
+        <p id="progress"></p>
+        <p id="question"></p>
+
+
+        <div id="choices">
+            <button id="btn0" class="choice-buttons"><span id="choice0"></span></button>
+            <button id="btn1" class="choice-buttons"><span id="choice1"></span></button>
+            <button id="btn2" class="choice-buttons"><span id="choice2"></span></button>
+            <button id="btn3" class="choice-buttons"><span id="choice3"></span></button>
+        </div>
+
+    </div>
+
+        <div id="answerbuttons">
+            <button id="back" , style="display:none">❮ Back</button>
+
+            <button id="next">Next ❯</button>
+
+        </div>
+
+        <label id="minutes">00</label>:<label id="seconds">00</label>
+        
+
+        <button id="submit" , style="display:none">Get Results</button>
+
+        <div id="results">
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
