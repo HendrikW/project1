@@ -63,14 +63,40 @@ function showProgress() {
 
 //show answers
 
+function saveTheAnswer(currentQuestionNumber, choiceIndex) {
+  let choices = questions[currentQuestionNumber].answers;
+
+  // console.log(currentQuestionNumber, choices[choiceIndex]);
+
+  if (choices[choiceIndex].correct === true) {
+    alert(`congratulations`);
+    pointsCounter++;
+  }
+}
+
+let pointsCounter = 0;
+
+
+
 function showChoices() {
   let choices = questions[currentQuestionNumber].answers;
   for (let i = 0; i < choices.length; i++) {
     // let span = document.getElementById('choice' + i);
     // let choiceButton = document.getElementById('btn' + i);
-    let choiceButton = document.getElementById('btn'+i)
-choiceButton.addEventListener('click',showNextButton)
-    let choiceContent = document.getElementById('choice' +i)
+    let choiceButton = document.getElementById('btn' + i);
+
+    console.log(choiceButton);
+
+    choiceButton.onclick = function() {
+      if (currentQuestionNumber === questions.length - 1) {
+        hideNextButton();
+      } else {
+        showNextButton();
+      }
+      saveTheAnswer(currentQuestionNumber, i);
+    };
+
+    let choiceContent = document.getElementById('choice' + i);
     choiceContent.innerText = choices[i].name;
     // if(choices[i].selected) {
     //   span.innerText += " - selected";
@@ -78,15 +104,13 @@ choiceButton.addEventListener('click',showNextButton)
     // choiceButton.addEventListener('click', function() {
     //   onChoiceButtonClick(i);
     //  choiceButton.addEventListener('click',showNextButton)
-    };
   }
-
+}
 
 // function onChoiceButtonClick(chosenAnswer) {
 //   showNextButton();
 //   saveTheAnswer(chosenAnswer);
 // }
-
 
 // Topic Header Input HTML
 const topicQuestion = document.getElementById('topic');
@@ -96,79 +120,105 @@ topicQuestion.innerHTML = questions[currentQuestionNumber].topic;
 function showQuestions() {
   let element = document.getElementById('question');
   element.innerHTML = questions[currentQuestionNumber].question;
-
-
 }
 
 const nextButton = document.getElementById('next-btn');
-// const backButton = document.getElementById('back-btn');
+const backButton = document.getElementById('back-btn');
 
 // onclick of button-next go to the next question and save the answer
 nextButton.addEventListener('click', showNextQuestion);
 
-// backButton.addEventListener('click', showPreviousQuestion);
+backButton.addEventListener('click', showPreviousQuestion);
 
 function showPreviousQuestion() {
   currentQuestionNumber = currentQuestionNumber - 1;
   showQuestions();
   showChoices();
   hideNextButton();
-
   if (currentQuestionNumber > 0) {
     showBackButton();
+  } else {
+    hideBackButton();
   }
 
-  if (currentQuestionNumber >= questions.length - 1) {
-    hideNextButton();
-  }
+  // if (currentQuestionNumber > 0) {
+  //   showBackButton();
+  // }
+
+  // if (currentQuestionNumber >= questions.length - 1) {
+  //   hideNextButton();
+  // }
   showProgress();
 }
 
 function showNextQuestion() {
-// showQuestions(shuffledQuestions[currentQuestionNumber])
-
-
-  let element = document.getElementById('question');
-  element.innerHTML = questions[currentQuestionNumber +1].question;
-  // currentQuestionNumber = currentQuestionNumber + 1;
+  // showQuestions(shuffledQuestions[currentQuestionNumber])
+  // let element = document.getElementById('question');
+  // element.innerHTML = questions[currentQuestionNumber +1].question;
+  currentQuestionNumber = currentQuestionNumber + 1;
   showQuestions();
   showChoices();
   hideNextButton();
+  if (currentQuestionNumber > 0) {
+    showBackButton();
+  } else {
+    hideBackButton();
+  }
+
+  if (currentQuestionNumber === questions.length - 1) {
+    showSubmitButton();
+  }
+
   showProgress();
 }
 
 // submit Button
-// const submitButton = getElementById('submit')
+const submitButton = document.getElementById('submit-btn');
 
-// submitButton.addEventListener('click', showResults)
+submitButton.addEventListener('click', showResults);
+
+let resultPage = document.createElement('results')
+
+// resultPage.innerText="This is a paragraph";
+document.body.appendChild(resultPage)
 
 
 
-// save the answer if clicked
-function saveTheAnswer(chosenAnswer) {
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  console.log('Hello')
 
-  for(let i = 0; i<4; i++) {
-    questions[currentQuestionNumber].answers[i].selected = false;
-    if(i != chosenAnswer) {
-      document.getElementById('choice' + i).innerText = questions[currentQuestionNumber].answers[i].name
-    }
-  }
-
-  questions[currentQuestionNumber].answers[chosenAnswer].selected = true;
-
-  document.getElementById('choice' + chosenAnswer).innerText = questions[currentQuestionNumber].answers[chosenAnswer].name + " - selected";
+resultPage.innerText = 'Hello'
+// `${pointsCounter} out of ${questions.length}`;
 }
 
-// Is Choice Selected? 
+
+
+
+// // // save the answer if clicked
+// function saveTheAnswer(chosenAnswer) {
+//   for (let i = 0; i < 4; i++) {
+//     questions[currentQuestionNumber].answers[i].selected = false;
+//     if (i != chosenAnswer) {
+//       document.getElementById('choice' + i).innerText =
+//         questions[currentQuestionNumber].answers[i].name;
+//     }
+//   }
+
+//   questions[currentQuestionNumber].answers[chosenAnswer].selected = true;
+
+//   document.getElementById('choice' + chosenAnswer).innerText =
+//     questions[currentQuestionNumber].answers[chosenAnswer].name + ' - selected';
+// }
+
+// Is Choice Selected?
 // function isChoiceSelected() {
 //   let choice0 = document.getElementById('btn0');
 //   let choice1 = document.getElementById('btn1');
 //   let choice2 = document.getElementById('btn2');
 //   let choice3 = document.getElementById('btn3');
 // }
-
-
-
 
 function startQuiz() {
   document.getElementById('quiz').style.display = 'block';
@@ -183,7 +233,6 @@ function startQuiz() {
   hideNextButton();
 }
 
-
 function showBackButton() {
   document.getElementById('back-btn').style.display = 'block';
 }
@@ -197,9 +246,12 @@ function hideNextButton() {
 }
 
 function showNextButton() {
-  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'block';
 }
 
+function showSubmitButton() {
+  document.getElementById('submit-btn').style.display = 'block';
+}
 
 // Timer
 // let minutesLabel = document.getElementById('minutes');
@@ -221,6 +273,3 @@ function showNextButton() {
 //     return valString;
 //   }
 // }
-
-
-
