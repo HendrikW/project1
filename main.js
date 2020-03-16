@@ -1,17 +1,14 @@
 const startButton = document.getElementById('start-btn');
-
 startButton.addEventListener('click', startQuiz);
 
 let currentQuestionNumber = 0;
-// const shuffledQuestions = 0;
-// const questionElement = document.getElementById('question')
-// const answerElement =document.getElementById('choices')
 
 // Questions
 
 const questions = [
   {
     question: 'Who invented JavaScript?',
+    imgURL: 'https://media.giphy.com/media/W7dBXzbnEpOBG/source.gif',
     answers: [
       { name: 'Douglas Crockford' },
       { name: 'Sheryl Sandberg' },
@@ -42,96 +39,106 @@ const questions = [
   },
   {
     question: 'Which tool can you use to ensure code quality??',
-    image: 'code-editoren-t.jpg',
+    imgURL: 'https://media.giphy.com/media/W7dBXzbnEpOBG/source.gif',
     answers: [
-      { name: 'Angular', correct: true },
+      { name: 'Angular' },
       { name: 'jQuery' },
       { name: 'RequireJS' },
-      { name: 'ESLint' }
+      { name: 'ESLint', correct: true }
     ],
     topic: 'Introduction JS'
   }
 ];
 
 // Counter of questions "Progress"
-
 function showProgress() {
   let element = document.getElementById('progress');
   element.innerHTML =
     'Question ' + (currentQuestionNumber + 1) + ' of ' + questions.length;
 }
 
-//show answers
+// Save the answer & have an array with the chosen answers
+
+let chosenAnswers = [];
 
 function saveTheAnswer(currentQuestionNumber, choiceIndex) {
+  
   let choices = questions[currentQuestionNumber].answers;
-
-  // console.log(currentQuestionNumber, choices[choiceIndex]);
+  // das ist die angeklickte Antwort mit dem Fragenindex und der Antwort
+  console.log(currentQuestionNumber, choices[choiceIndex]);
+  chosenAnswers[currentQuestionNumber] = choices[choiceIndex];
 
   if (choices[choiceIndex].correct === true) {
-    alert(`congratulations`);
+    // alert(`congratulations`);
     pointsCounter++;
   }
 }
 
 let pointsCounter = 0;
 
-
-
 function showChoices() {
+  // antworten aus dem fragen objekt
   let choices = questions[currentQuestionNumber].answers;
+  console.log(questions[currentQuestionNumber].answers);
   for (let i = 0; i < choices.length; i++) {
-    // let span = document.getElementById('choice' + i);
-    // let choiceButton = document.getElementById('btn' + i);
+    // choiceButton
     let choiceButton = document.getElementById('btn' + i);
 
-    console.log(choiceButton);
+    // console.log(choiceButton);
 
     choiceButton.onclick = function() {
+      choiceButton.style.border = 'solid #00000';
       if (currentQuestionNumber === questions.length - 1) {
         hideNextButton();
       } else {
         showNextButton();
-      }
+      };
+
+      if (currentQuestionNumber === questions.length -1) {
+        showSubmitButton();
+      } else {
+        hideSubmitButton ();
+      };
       saveTheAnswer(currentQuestionNumber, i);
     };
-
+// show choices:
     let choiceContent = document.getElementById('choice' + i);
     choiceContent.innerText = choices[i].name;
-    // if(choices[i].selected) {
-    //   span.innerText += " - selected";
-    // }
-    // choiceButton.addEventListener('click', function() {
-    //   onChoiceButtonClick(i);
-    //  choiceButton.addEventListener('click',showNextButton)
   }
 }
 
-// function onChoiceButtonClick(chosenAnswer) {
-//   showNextButton();
-//   saveTheAnswer(chosenAnswer);
-// }
 
 // Topic Header Input HTML
 const topicQuestion = document.getElementById('topic');
 topicQuestion.innerHTML = questions[currentQuestionNumber].topic;
 
-// show Questions
+// Show Questions
 function showQuestions() {
   let element = document.getElementById('question');
   element.innerHTML = questions[currentQuestionNumber].question;
+  if ('imgURL' in questions[currentQuestionNumber]) {
+    let y = document.createElement('br');
+    element.appendChild(y);
+
+    let imgObj = document.createElement('img'); // <img> <img1>
+    imgObj.setAttribute('src', questions[currentQuestionNumber].imgURL);
+    imgObj.setAttribute('alt', 'imgObj');
+    let x = document.getElementById('question');
+    x.appendChild(imgObj);
+  }
 }
 
 const nextButton = document.getElementById('next-btn');
 const backButton = document.getElementById('back-btn');
 
 // onclick of button-next go to the next question and save the answer
-nextButton.addEventListener('click', showNextQuestion);
+nextButton.addEventListener('click', function() { showNextQuestion(); saveTheAnswer() });
 
 backButton.addEventListener('click', showPreviousQuestion);
 
 function showPreviousQuestion() {
   currentQuestionNumber = currentQuestionNumber - 1;
+  pointsCounter--;
   showQuestions();
   showChoices();
   hideNextButton();
@@ -140,22 +147,14 @@ function showPreviousQuestion() {
   } else {
     hideBackButton();
   }
+  hideSubmitButton();
 
-  // if (currentQuestionNumber > 0) {
-  //   showBackButton();
-  // }
-
-  // if (currentQuestionNumber >= questions.length - 1) {
-  //   hideNextButton();
-  // }
   showProgress();
 }
 
 function showNextQuestion() {
-  // showQuestions(shuffledQuestions[currentQuestionNumber])
-  // let element = document.getElementById('question');
-  // element.innerHTML = questions[currentQuestionNumber +1].question;
   currentQuestionNumber = currentQuestionNumber + 1;
+  showProgress();
   showQuestions();
   showChoices();
   hideNextButton();
@@ -163,38 +162,183 @@ function showNextQuestion() {
     showBackButton();
   } else {
     hideBackButton();
-  }
+  };
 
-  if (currentQuestionNumber === questions.length - 1) {
-    showSubmitButton();
-  }
+  // let choiceButton = document.getElementById('btn' + i);
+  // choiceButton.onclick = function() {
+  // if (currentQuestionNumber === questions.length - 1) {
+  //   showSubmitButton();
+  // } else {
+  //   hideSubmitButton();
+  // }
 
-  showProgress();
 }
 
-// submit Button
+
+// Submit Button
 const submitButton = document.getElementById('submit-btn');
 
 submitButton.addEventListener('click', showResults);
 
-let resultPage = document.createElement('results')
-
-// resultPage.innerText="This is a paragraph";
-document.body.appendChild(resultPage)
-
+// let resultPage = document.createElement('results');
 
 
 function showResults() {
+  let resultPage = document.getElementById('results');
   document.getElementById('quiz').style.display = 'none';
-  document.getElementById('results').style.display = 'block';
-  console.log('Hello')
 
-resultPage.innerText = 'Hello'
-// `${pointsCounter} out of ${questions.length}`;
+  let headerResults = document.createElement('h1');
+  let text = document.createTextNode('Your results:');
+  headerResults.appendChild(text);
+  resultPage.appendChild(headerResults);
+
+  let rightAnswers = document.createElement('p');
+  let textAns = document.createTextNode(
+    `${pointsCounter} out of ${questions.length}`
+  );
+  rightAnswers.appendChild(textAns);
+  resultPage.appendChild(rightAnswers);
+
+  let enteredPoints = `${pointsCounter}`;
+
+  let totalPoints = questions.length;
+  let percent = (enteredPoints * 100) / totalPoints;
+
+  let userPercent = document.createElement('p');
+  let userPercentElement = document.createTextNode(percent + ' %');
+  userPercent.appendChild(userPercentElement);
+  resultPage.appendChild(userPercent);
+
+
+  if (percent >= 80) {
+    let p1 = document.createElement('p');
+    let text1 = document.createTextNode('Impressive. You did an amazing job!');
+    p1.appendChild(text1);
+    resultPage.appendChild(p1);
+    
+    let img1 = document.createElement('img'); 
+    img1.setAttribute(
+      'src',
+      'https://media.giphy.com/media/YRuFixSNWFVcXaxpmX/giphy.gif'
+    );
+    img1.setAttribute('alt', 'img1');
+    let src1 = document.getElementById('results');
+
+    src1.appendChild(img1);
+  } else if (percent >= 45) {
+    let p2 = document.createElement('p');
+    let text2 = document.createTextNode('Well, I think you can do better…');
+    p2.appendChild(text2);
+    resultPage.appendChild(p2);
+
+    let img2 = document.createElement('img'); 
+    img2.setAttribute(
+      'src',
+      'https://media.giphy.com/media/qLWdMYX1NYF2g/giphy.gif'
+    );
+    img2.setAttribute('alt', 'img2');
+    let src2 = document.getElementById('results');
+    src2.appendChild(img2);
+  } else {
+    let p3 = document.createElement('p');
+    let text3 = document.createTextNode('Loser! Please try again.');
+    p3.appendChild(text3);
+    resultPage.appendChild(p3);
+
+    let img3 = document.createElement('img'); // <img> <img1>
+    img3.setAttribute(
+      'src',
+      'https://media.giphy.com/media/pGYmjOL2vDiak/giphy.gif'
+    );
+    img3.setAttribute('alt', 'img3');
+    let src3 = document.getElementById('results');
+    src3.appendChild(img3);
+  }
+
+  // create a div for the two buttons on the resultpage
+  let buttonsResultPage = document.createElement('div');
+  resultPage.appendChild(buttonsResultPage);
+
+  let checkYourAnswersButton = document.createElement('BUTTON');
+  checkYourAnswersButton.setAttribute('id', 'check-answers-btn');
+  let text1 = document.createTextNode('Check your answers');
+
+  checkYourAnswersButton.appendChild(text1);
+  buttonsResultPage.appendChild(checkYourAnswersButton);
+
+  checkYourAnswersButton.addEventListener('click', showChosenAnswers);
+
+  let tryAgainButton = document.createElement('BUTTON');
+  tryAgainButton.setAttribute('id', 'try-again-btn');
+
+  let text2 = document.createTextNode('Try again');
+
+  tryAgainButton.appendChild(text2);
+  buttonsResultPage.appendChild(tryAgainButton);
+
+  tryAgainButton.onclick = function() {
+    startQuiz();
+    resultPage.style.display = 'none';
+  };
+}
+
+function showChosenAnswers() {
+  // creating a new header for the chosen answers in the dom
+  let answerHeader = document.createElement('h1');
+  let newText = document.createTextNode('Your answers:');
+  answerHeader.appendChild(newText);
+  let resultPage = document.getElementById('results');
+  resultPage.appendChild(answerHeader);
+
+  // Fragen Loop
+  for (let i = 0; i < questions.length; i++) {
+    let questionNoForChosenAnswers = questions[i];
+
+    let questionElement = document.createElement('p');
+    questionElement.innerHTML = `${i + 1}. ${questions[i].question}`;
+
+    let answerElement = document.createElement('p');
+    // answerElement.innerText = questions[i].answers;
+
+    resultPage.appendChild(questionElement);
+    resultPage.appendChild(answerElement);
+
+    // show all answers from the right question
+    let answers = '';
+    for (let j = 0; j < questions[i].answers.length; j++) {
+      let className = '';
+      if (questions[i].answers[j].correct === true) {
+        className += 'correct ';
+      } else {
+        className += 'false ';
+      }
+
+      if (questions[i].answers[j].name === chosenAnswers[i].name) {
+        className += 'chosen ';
+      }
+
+      answers += `<p class="${className}">${questions[i].answers[j].name}</p>`;
+
+      console.log(answers);
+    }
+
+    answerElement.innerHTML = answers;
+  }
+
 }
 
 
+// let resultPage = document.getElementById('results');
+// resultPage.appendChild(newDiv);
 
+//   chosenAnswers[currentQuestionNumber] = choices[choiceIndex];
+
+// show the answers below the resultpage
+
+// resultPage.innerText = 'Your results:';
+// console.log(resultPage.innerText)
+
+// let userScore = document.getElementById('score');
 
 // // // save the answer if clicked
 // function saveTheAnswer(chosenAnswer) {
@@ -223,20 +367,20 @@ resultPage.innerText = 'Hello'
 function startQuiz() {
   document.getElementById('quiz').style.display = 'block';
   document.getElementById('start').style.display = 'none';
-  showProgress();
-
   // shuffledQuestions = questions.sort(()=> Math.random()-.5)
   currentQuestionNumber = 0;
+  pointsCounter >= 0;
+  showProgress();
   showQuestions();
   showChoices();
   hideBackButton();
   hideNextButton();
+  hideSubmitButton();
 }
 
 function showBackButton() {
   document.getElementById('back-btn').style.display = 'block';
 }
-
 function hideBackButton() {
   document.getElementById('back-btn').style.display = 'none';
 }
@@ -244,13 +388,15 @@ function hideBackButton() {
 function hideNextButton() {
   document.getElementById('next-btn').style.display = 'none';
 }
-
 function showNextButton() {
   document.getElementById('next-btn').style.display = 'block';
 }
 
 function showSubmitButton() {
   document.getElementById('submit-btn').style.display = 'block';
+}
+function hideSubmitButton() {
+  document.getElementById('submit-btn').style.display = 'none';
 }
 
 // Timer
@@ -271,5 +417,4 @@ function showSubmitButton() {
 //     return '0' + valString;
 //   } else {
 //     return valString;
-//   }
-// }
+//   };
